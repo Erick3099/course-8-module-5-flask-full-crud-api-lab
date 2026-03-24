@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
+
 class Event:
     def __init__(self, id, title):
         self.id = id
@@ -13,6 +14,7 @@ events = [
     Event(1, "Tech Meetup"),
     Event(2, "Python Workshop")
 ]
+
 def find_event(event_id):
     for event in events:
         if event.id == event_id:
@@ -25,9 +27,11 @@ def find_event(event_id):
 def home():
     return jsonify({"message": "Welcome to the Event Management API"}), 200
 
+
 @app.route("/events", methods=["GET"])
 def get_events():
     return jsonify([event.to_dict() for event in events]), 200
+
 
 @app.route("/events", methods=["POST"])
 def create_event():
@@ -41,6 +45,7 @@ def create_event():
     events.append(new_event)
 
     return jsonify(new_event.to_dict()), 201
+
 
 @app.route("/events/<int:event_id>", methods=["PATCH"])
 def update_event(event_id):
@@ -58,7 +63,8 @@ def update_event(event_id):
 
     return jsonify(event.to_dict()), 200
 
-# DELETE /events/<id> - Delete an event
+
+# FIXED DELETE ROUTE
 @app.route("/events/<int:event_id>", methods=["DELETE"])
 def delete_event(event_id):
     event = find_event(event_id)
@@ -68,8 +74,8 @@ def delete_event(event_id):
 
     events.remove(event)
 
-    return jsonify({"message": "Event deleted successfully"}), 200
+    return '', 204   
+
 
 if __name__ == "__main__":
     app.run(debug=True)
-
